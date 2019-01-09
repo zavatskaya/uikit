@@ -154,3 +154,42 @@ class ViewController: UIViewController {
     
     
 }
+
+
+
+// UITextField
+
+import UIKit
+
+class ViewController: UIViewController {
+    
+    @IBOutlet weak var label: UILabel!
+    @IBOutlet weak var textField: UITextField!
+    
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        label.isHidden = true
+    }
+    
+    @IBAction func pressedButton(_ sender: UIButton) {
+        
+        label.isHidden = false
+        
+        guard textField.text?.isEmpty == false else { return }
+        
+        if let _ = Double(textField.text!) {
+            let alert = UIAlertController(title: "wrong format", message: "please enter your name", preferredStyle: .alert)
+            let okAction = UIAlertAction(title: "OK", style: .default, handler: nil)
+            alert.addAction(okAction)
+            present(alert, animated: true, completion: nil )
+        } else {
+            label.text = textField.text
+            textField.text = nil
+        }
+        
+        
+    }
+    
+}
