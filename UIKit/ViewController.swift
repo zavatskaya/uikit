@@ -547,4 +547,68 @@ extension ViewController: UITextViewDelegate {
 
 
 
+// UIStepper
 
+import UIKit
+
+class ViewController: UIViewController {
+    
+    @IBOutlet weak var countLabel: UILabel!
+    @IBOutlet weak var textView: UITextView!
+    @IBOutlet weak var stepper: UIStepper!
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        // Do any additional setup after loading the view, typically from a nib.
+        
+        //textView.text = ""
+        
+        textView.font = UIFont(name: "AppleSDGothicNeo-Regular", size: 20)
+        
+        textView.delegate = self
+        textView.layer.cornerRadius = 10
+        
+        stepper.value = 20
+        stepper.minimumValue = 15
+        stepper.maximumValue = 30
+        
+        
+    }
+    
+    // скрытие клавиатуры по тапу за пределами textview
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        super.touchesBegan(touches, with: event)
+        
+        self.view.endEditing(true) // скрыть клавиатуру, вызванную для любого объекта
+        
+        // textView.resignFirstResponder() // скрыть клавиатуру, вызванную для конкретного объекта
+    }
+    
+    @IBAction func sizeFont(_ sender: UIStepper) {
+        
+        let font = textView.font?.fontName
+        let fontSize = CGFloat(sender.value)
+        
+        textView.font = UIFont(name: font!, size: fontSize)
+    }
+    
+}
+
+extension ViewController: UITextViewDelegate {
+    
+    func textViewDidBeginEditing(_ textView: UITextView) { // срабатывает при тапе на textview
+        textView.backgroundColor = .gray
+        textView.textColor = .white
+    }
+    
+    func textViewDidEndEditing(_ textView: UITextView) { // срабатывает при тапе за пределы textview (окончание работы)
+        textView.backgroundColor = self.view.backgroundColor
+        textView.textColor = .black
+    }
+    
+    func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
+        countLabel.text = "\(textView.text.count)"
+        return textView.text.count + (text.count - range.length) <= 60
+    }
+}
