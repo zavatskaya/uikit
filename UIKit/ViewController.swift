@@ -94,3 +94,46 @@ class ViewController: UIViewController {
     
 }
 
+
+
+// UISegmentedControl - 1
+
+import UIKit
+
+class ViewController: UIViewController {
+    
+    @IBOutlet weak var segmentedControl: UISegmentedControl!
+    @IBOutlet weak var label: UILabel!
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        
+        label.isHidden = true
+        label.font = label.font.withSize(35)
+        label.textAlignment = .center
+        label.numberOfLines = 5
+        
+        segmentedControl.insertSegment(withTitle: "Third", at: 2, animated: true)
+    }
+    
+    @IBAction func choiceSegment(_ sender: UISegmentedControl) {
+        
+        label.isHidden = false
+        
+        switch segmentedControl.selectedSegmentIndex {
+        case 0:
+            label.text = "the first segment is selected"
+            label.textColor = .red
+        case 1:
+            label.text = "the second segment is selected"
+            label.textColor = .blue
+        case 2:
+            label.text = "the third segment is selected"
+            label.textColor = .yellow
+        default:
+            print("smth wrong!")
+        }
+    }
+    
+}
