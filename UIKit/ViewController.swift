@@ -315,7 +315,7 @@ class ViewController: UIViewController {
 
 
 
-// UIPickerView 
+// UIPickerView
 
 
 import UIKit
@@ -493,3 +493,58 @@ extension ViewController: UIPickerViewDataSource, UIPickerViewDelegate {
     }
     
 }
+
+
+// UITextView
+
+import UIKit
+
+class ViewController: UIViewController {
+    
+    @IBOutlet weak var countLabel: UILabel!
+    @IBOutlet weak var textView: UITextView!
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        // Do any additional setup after loading the view, typically from a nib.
+        
+        textView.text = ""
+        
+        textView.delegate = self
+        textView.layer.cornerRadius = 10
+        
+    }
+    
+    // скрытие клавиатуры по тапу за пределами textview
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        super.touchesBegan(touches, with: event)
+        
+        self.view.endEditing(true) // скрыть клавиатуру, вызванную для любого объекта
+        
+        // textView.resignFirstResponder() // скрыть клавиатуру, вызванную для конкретного объекта
+    }
+    
+}
+
+extension ViewController: UITextViewDelegate {
+    
+    func textViewDidBeginEditing(_ textView: UITextView) { // срабатывает при тапе на textview
+        textView.backgroundColor = .gray
+        textView.textColor = .white
+    }
+    
+    func textViewDidEndEditing(_ textView: UITextView) { // срабатывает при тапе за пределы textview (окончание работы)
+        textView.backgroundColor = self.view.backgroundColor
+        textView.textColor = .black
+    }
+    
+    func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
+        countLabel.text = "\(textView.text.count)"
+        return textView.text.count + (text.count - range.length) <= 60
+    }
+}
+
+
+
+
