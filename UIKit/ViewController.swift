@@ -312,3 +312,184 @@ class ViewController: UIViewController {
     
     
 }
+
+
+
+// UIPickerView 
+
+
+import UIKit
+
+class ViewController: UIViewController {
+    
+    var uiElements = ["UILabel", "UITextField", "UIDatePicker", "UISwitchLabel", "UIButton"]
+    
+    var selectedElement: String?
+    
+    @IBOutlet weak var label: UILabel!
+    @IBOutlet weak var textField: UITextField!
+    @IBOutlet weak var datePicker: UIDatePicker!
+    @IBOutlet weak var switchLabel: UILabel!
+    @IBOutlet weak var doneButton: UIButton!
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        label.numberOfLines = 5
+        datePicker.locale = Locale(identifier: "ru_RU")
+        
+        choiceUiElement()
+        createToolbar()
+    }
+    
+    func hideAllelements() {
+        
+        label.isHidden = true
+        datePicker.isHidden = true
+        doneButton.isHidden = true
+        
+    }
+    
+    func choiceUiElement() {
+        
+        let elementPicker = UIPickerView()
+        elementPicker.delegate = self
+        
+        textField.inputView = elementPicker
+        
+        // customize
+        
+        elementPicker.backgroundColor = .brown
+        
+    }
+    
+    func createToolbar(){
+        
+        let toolbar = UIToolbar()
+        toolbar.sizeToFit()
+        
+        let doneButton = UIBarButtonItem(title: "Done", style: .plain, target: self, action: #selector(dismissKeyboard))
+        
+        toolbar.setItems([doneButton], animated: true)
+        toolbar.isUserInteractionEnabled = true
+        
+        textField.inputAccessoryView = toolbar
+        
+        // customize
+        
+        toolbar.tintColor = .white
+        toolbar.barTintColor = .brown
+        
+    }
+    
+    @objc func dismissKeyboard() {
+        view.endEditing(true)
+    }
+    
+    @IBAction func pressedButton(_ sender: UIButton) {
+        
+        
+        guard textField.text?.isEmpty == false else { return }
+        
+        if let _ = Double(textField.text!) {
+            let alert = UIAlertController(title: "wrong format", message: "please enter your name", preferredStyle: .alert)
+            let okAction = UIAlertAction(title: "OK", style: .default, handler: nil)
+            alert.addAction(okAction)
+            present(alert, animated: true, completion: nil )
+        } else {
+            label.text = textField.text
+            textField.text = nil
+        }
+        
+        
+    }
+    
+    @IBAction func changeDate(_ sender: UIDatePicker) {
+        
+        let dateFormatter = DateFormatter()
+        
+        dateFormatter.dateStyle = .full
+        dateFormatter.locale = Locale(identifier: "ru_RU")
+        
+        let dateValue = dateFormatter.string(from: sender.date)
+        
+        label.text = dateValue
+    }
+    
+    
+    @IBAction func switchAction(_ sender: UISwitch) {
+        label.isHidden = !label.isHidden
+        textField.isHidden = !textField.isHidden
+        datePicker.isHidden = !datePicker.isHidden
+        doneButton.isHidden = !doneButton .isHidden
+        
+        if sender.isOn {
+            switchLabel.text = "отобразить все элементы"
+        } else {
+            switchLabel.text = "скрыть все элементы"
+        }
+    }
+    
+    
+}
+
+extension ViewController: UIPickerViewDataSource, UIPickerViewDelegate {
+    
+    func numberOfComponents(in pickerView: UIPickerView) -> Int {
+        return 1
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+        return uiElements.count
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+        return uiElements[row]
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+        
+        selectedElement = uiElements[row]
+        textField.text = selectedElement
+        
+        switch row {
+        case 0:
+            hideAllelements()
+            label.isHidden = false
+        case 1:
+            hideAllelements()
+        case 2:
+            hideAllelements()
+            datePicker.isHidden = false
+        case 3:
+            hideAllelements()
+            switchLabel.isHidden = false
+        case 4 :
+            hideAllelements()
+            doneButton.isHidden = false
+        default:
+            hideAllelements()
+        }
+        
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, viewForRow row: Int, forComponent component: Int, reusing view: UIView?) -> UIView {
+        
+        var pickerViewLabel = UILabel()
+        
+        if let currentLabel = view as? UILabel {
+            pickerViewLabel = currentLabel
+        } else {
+            pickerViewLabel = UILabel()
+        }
+        
+        pickerViewLabel.textColor = .white
+        pickerViewLabel.textAlignment = .center
+        pickerViewLabel.font = UIFont(name: "AppleSDGothicNeo-Regular", size: 23)
+        pickerViewLabel.text = uiElements[row]
+        
+        return pickerViewLabel
+        
+    }
+    
+}
