@@ -699,3 +699,101 @@ extension ViewController: UITextViewDelegate {
         return textView.text.count + (text.count - range.length) <= 60
     }
 }
+
+
+//UIProgressView 
+
+import UIKit
+
+class ViewController: UIViewController {
+    
+    @IBOutlet weak var countLabel: UILabel!
+    @IBOutlet weak var textView: UITextView!
+    @IBOutlet weak var stepper: UIStepper!
+    @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
+    @IBOutlet weak var progressViewController: UIProgressView!
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        // Do any additional setup after loading the view, typically from a nib.
+        
+        textView.isHidden = true
+        //textView.alpha = 0
+        
+        //textView.text = ""
+        
+        textView.font = UIFont(name: "AppleSDGothicNeo-Regular", size: 20)
+        
+        textView.delegate = self
+        textView.layer.cornerRadius = 10
+        
+        stepper.value = 20
+        stepper.minimumValue = 15
+        stepper.maximumValue = 30
+        
+        activityIndicator.hidesWhenStopped = true
+        activityIndicator.color =  colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+        activityIndicator.startAnimating()
+        UIApplication.shared.beginIgnoringInteractionEvents() // заморозка экрана
+        
+        progressViewController.setProgress(0, animated: true)
+        
+        //        UIView.animate(withDuration: 0,
+        //                       delay: 5,
+        //                       options: .curveEaseIn,
+        //                       animations: { self.textView.alpha = 1 }) { (finished) in
+        //                        self.activityIndicator.stopAnimating()
+        //                        self.textView.isHidden = false
+        //                        UIApplication.shared.endIgnoringInteractionEvents()
+        //        }
+        
+        Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { _ in
+            if self.progressViewController.progress != 1 {
+                self.progressViewController.progress += 0.2
+            } else {
+                self.activityIndicator.stopAnimating()
+                self.textView.isHidden = false
+                UIApplication.shared.endIgnoringInteractionEvents()
+                self.progressViewController.isHidden = true
+            }
+        }
+        
+    }
+    
+    // скрытие клавиатуры по тапу за пределами textview
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        super.touchesBegan(touches, with: event)
+        
+        self.view.endEditing(true) // скрыть клавиатуру, вызванную для любого объекта
+        
+        // textView.resignFirstResponder() // скрыть клавиатуру, вызванную для конкретного объекта
+    }
+    
+    @IBAction func sizeFont(_ sender: UIStepper) {
+        
+        let font = textView.font?.fontName
+        let fontSize = CGFloat(sender.value)
+        
+        textView.font = UIFont(name: font!, size: fontSize)
+    }
+    
+}
+
+extension ViewController: UITextViewDelegate {
+    
+    func textViewDidBeginEditing(_ textView: UITextView) { // срабатывает при тапе на textview
+        textView.backgroundColor = .gray
+        textView.textColor = .white
+    }
+    
+    func textViewDidEndEditing(_ textView: UITextView) { // срабатывает при тапе за пределы textview (окончание работы)
+        textView.backgroundColor = self.view.backgroundColor
+        textView.textColor = .black
+    }
+    
+    func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
+        countLabel.text = "\(textView.text.count)"
+        return textView.text.count + (text.count - range.length) <= 60
+    }
+}
