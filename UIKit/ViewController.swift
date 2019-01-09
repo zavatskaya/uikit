@@ -245,3 +245,70 @@ class ViewController: UIViewController {
     
     
 }
+
+
+// UISwitch - choice on/off
+
+import UIKit
+
+class ViewController: UIViewController {
+    
+    @IBOutlet weak var label: UILabel!
+    @IBOutlet weak var textField: UITextField!
+    @IBOutlet weak var datePicker: UIDatePicker!
+    @IBOutlet weak var switchLabel: UILabel!
+    @IBOutlet weak var doneButton: UIButton!
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        label.numberOfLines = 5
+        datePicker.locale = Locale(identifier: "ru_RU")
+    }
+    
+    @IBAction func pressedButton(_ sender: UIButton) {
+        
+        
+        guard textField.text?.isEmpty == false else { return }
+        
+        if let _ = Double(textField.text!) {
+            let alert = UIAlertController(title: "wrong format", message: "please enter your name", preferredStyle: .alert)
+            let okAction = UIAlertAction(title: "OK", style: .default, handler: nil)
+            alert.addAction(okAction)
+            present(alert, animated: true, completion: nil )
+        } else {
+            label.text = textField.text
+            textField.text = nil
+        }
+        
+        
+    }
+    
+    @IBAction func changeDate(_ sender: UIDatePicker) {
+        
+        let dateFormatter = DateFormatter()
+        
+        dateFormatter.dateStyle = .full
+        dateFormatter.locale = Locale(identifier: "ru_RU")
+        
+        let dateValue = dateFormatter.string(from: sender.date)
+        
+        label.text = dateValue
+    }
+    
+    
+    @IBAction func switchAction(_ sender: UISwitch) {
+        label.isHidden = !label.isHidden
+        textField.isHidden = !textField.isHidden
+        datePicker.isHidden = !datePicker.isHidden
+        doneButton.isHidden = !doneButton .isHidden
+        
+        if sender.isOn {
+            switchLabel.text = "отобразить все элементы"
+        } else {
+            switchLabel.text = "скрыть все элементы"
+        }
+    }
+    
+    
+}
