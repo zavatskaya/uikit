@@ -96,7 +96,7 @@ class ViewController: UIViewController {
 
 
 
-// UISegmentedControl - 1
+// UISlider
 
 import UIKit
 
@@ -104,15 +104,23 @@ class ViewController: UIViewController {
     
     @IBOutlet weak var segmentedControl: UISegmentedControl!
     @IBOutlet weak var label: UILabel!
+    @IBOutlet weak var slider: UISlider!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        slider.value = 1
         
-        label.isHidden = true
+        label.text = String(slider.value)
         label.font = label.font.withSize(35)
         label.textAlignment = .center
         label.numberOfLines = 5
+        
+        slider.minimumValue = 0
+        slider.maximumValue = 1
+        slider.minimumTrackTintColor = .yellow
+        slider.maximumTrackTintColor = .red
+        slider.thumbTintColor = .blue
         
         segmentedControl.insertSegment(withTitle: "Third", at: 2, animated: true)
     }
@@ -135,5 +143,14 @@ class ViewController: UIViewController {
             print("smth wrong!")
         }
     }
+    
+    @IBAction func sliderAction(_ sender: UISlider) {
+        
+        label.text = String(sender.value)
+        
+        let backgroundColor = self.view.backgroundColor
+        self.view.backgroundColor = backgroundColor?.withAlphaComponent(CGFloat(sender.value))
+    }
+    
     
 }
